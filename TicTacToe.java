@@ -25,14 +25,17 @@ public class TicTacToe{
   String playerX = "X";
   String playerO = "O";
   String currentPlayer = playerX;
-  String filepath = "G:\\java projects\\TicTacToe\\sound\\button press.wav";
-  String fanfare = "G:\\java projects\\TicTacToe\\sound\\you win.wav";
-  String failure = "G:\\java projects\\TicTacToe\\sound\\failure.wav";
+  String filepath = "E:\\java projects\\TicTacToe\\sound\\button press.wav";
+  String fanfare = "E:\\java projects\\TicTacToe\\sound\\you win.wav";
+  String failure = "E:\\java projects\\TicTacToe\\sound\\failure.wav";
   
   JButton restartButton = new JButton("restart");
   
+  boolean tie = false;
   boolean gameOver = false;
-  int turns = 0; 
+  int turns = 0;
+  int winX = 0;
+  int winO = 0; 
   
   
   TicTacToe(){
@@ -57,7 +60,7 @@ public class TicTacToe{
     textLable.setForeground(TicTacToe.purple);
     textLable.setFont(new Font("Arial", Font.BOLD, 50));
     textLable.setHorizontalAlignment(JLabel.CENTER);
-    textLable.setText("Tic-Tac-Toe");
+    textLable.setText("X:"+winX+"   Tic-Tac-Toe   "+"O:" + winO);
     textLable.setOpaque(true);
 
     textPanel.setLayout(new BorderLayout());
@@ -95,7 +98,7 @@ public class TicTacToe{
                         checkWinner();
                         if(!gameOver) {
                             currentPlayer = currentPlayer.equals(playerX) ? playerO : playerX;
-                            textLable.setText(currentPlayer + "'s turn. ");
+                            textLable.setText("X:"+winX+ "   "+currentPlayer + "'s turn.   "+"O:" + winO);
                         } 
                     }
                     
@@ -109,8 +112,9 @@ public class TicTacToe{
                 playSound(filepath);
                 turns = 0;
                 gameOver= false;
+                tie = false;
                 currentPlayer = playerX;
-                textLable.setText("Tic-Tac-Toe");
+                textLable.setText("X:"+winX+"   Tic-Tac-Toe   "+"O:" + winO);
                 for (int r = 0; r<3; r++){
                     for (int c = 0; c<3; c++){
                         resetColor(board[r][c]);
@@ -134,6 +138,7 @@ public class TicTacToe{
                 setWinner(board[r][i]);
             }
             gameOver = true;
+            addScore();
             return;
         }
     }
@@ -148,6 +153,7 @@ public class TicTacToe{
                     setWinner(board[s][c]);
                 }
                 gameOver = true;
+                addScore();
                 return;
             }
         }
@@ -159,6 +165,7 @@ public class TicTacToe{
                 setWinner(board[d][d]);
             } 
             gameOver = true;
+            addScore();
             return;
         }
         //antidiagonal right to left
@@ -170,6 +177,7 @@ public class TicTacToe{
              setWinner(board[2][0]);
         
             gameOver = true;
+            addScore();
             return;
         }
 
@@ -180,6 +188,7 @@ public class TicTacToe{
                 }
             }
             gameOver = true;
+            addScore();
             return;
         }
   }
@@ -187,13 +196,14 @@ public class TicTacToe{
         playFanfare(fanfare);
         tile.setForeground(Color.green);
         tile.setBackground(Color.darkGray);
-        textLable.setText(currentPlayer + " is the winner!" );
+        textLable.setText("X:"+winX+" "+currentPlayer + " is the winner! "+"O:" + winO );
   }
   void SetTie(JButton tile){
     playFail(failure);
     tile.setForeground(Color.yellow);
     tile.setBackground(Color.darkGray);
-    textLable.setText("Tie!");
+    textLable.setText("X:"+winX+"         Tie!         "+"O:" + winO);
+    tie = true;
   }
   void resetColor(JButton tile){
     tile.setForeground(TicTacToe.purple);
@@ -242,6 +252,16 @@ public class TicTacToe{
         }
     } catch (Exception e) {
         System.out.println("fail");
+    }
+  }
+  void addScore(){
+    if( gameOver && currentPlayer == playerX && tie == false){
+        winX++;
+        textLable.setText("X:"+winX+" "+currentPlayer + " is the winner! "+"O:" + winO );
+    }
+    if (gameOver&&currentPlayer == playerO) {
+        winO++;
+        textLable.setText("X:"+winX+" "+currentPlayer + " is the winner! "+"O:" + winO );
     }
   }
 }
